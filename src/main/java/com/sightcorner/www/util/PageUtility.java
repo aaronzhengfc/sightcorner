@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.HtmlUtils;
@@ -68,6 +69,26 @@ public class PageUtility {
         return result;
     }
 
+    public static void main(String[] args) {
+        String p = "2015_01_15";
+        String result = getFileContent(Constant.DATA_FILE + "/event/" + p.split("_")[0] + "/event_" + p + ".sc", new ContentHandler(){
+            @Override
+            public void lineHandle(StringBuffer content, String tmp) {
+                if(content.length() > 0){
+                    content.append("\n");
+                }
+                Matcher matcher = Constant.EVENT_IMAGE_PATTERN.matcher(tmp);
+                if(matcher.matches()){
+                    tmp=matcher.group();
+                    tmp="<div class='image-package imagebubble'><img src='/sightcorner/event/" + tmp + ".jpg'></img></div>";
+                    content.append(tmp);
+                }else{
+                    content.append("<p>").append(tmp).append("</p>");
+                }
+            }
+        });
+        System.out.println(result);
+    }
 
 
     /**
